@@ -25,3 +25,6 @@ If we meet some day, and you think this stuff is worth it, you can buy me a beer
 ####Badges
 
 [![Analytics](https://ga-beacon.appspot.com/UA-32954204-2/VerticalViewPager/readme)](https://github.com/igrigorik/ga-beacon)
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/castorflex/verticalviewpager/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
