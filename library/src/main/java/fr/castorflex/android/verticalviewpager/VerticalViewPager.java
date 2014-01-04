@@ -2316,7 +2316,7 @@ public class VerticalViewPager extends ViewGroup {
         }
     }
 
-    public boolean canScrollHorizontally(int direction) {
+    public boolean internalCanScrollVertically(int direction) {
         if (mAdapter == null) {
             return false;
         }
@@ -2674,10 +2674,10 @@ public class VerticalViewPager extends ViewGroup {
             super.onInitializeAccessibilityNodeInfo(host, info);
             info.setClassName(ViewPager.class.getName());
             info.setScrollable(canScroll());
-            if (canScrollVertically(1)) {
+            if (internalCanScrollVertically(1)) {
                 info.addAction(AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD);
             }
-            if (canScrollVertically(-1)) {
+            if (internalCanScrollVertically(-1)) {
                 info.addAction(AccessibilityNodeInfoCompat.ACTION_SCROLL_BACKWARD);
             }
         }
@@ -2689,14 +2689,14 @@ public class VerticalViewPager extends ViewGroup {
             }
             switch (action) {
                 case AccessibilityNodeInfoCompat.ACTION_SCROLL_FORWARD: {
-                    if (canScrollVertically(1)) {
+                    if (internalCanScrollVertically(1)) {
                         setCurrentItem(mCurItem + 1);
                         return true;
                     }
                 }
                 return false;
                 case AccessibilityNodeInfoCompat.ACTION_SCROLL_BACKWARD: {
-                    if (canScrollVertically(-1)) {
+                    if (internalCanScrollVertically(-1)) {
                         setCurrentItem(mCurItem - 1);
                         return true;
                     }
