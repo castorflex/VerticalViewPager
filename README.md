@@ -14,6 +14,10 @@ dependencies {
 }
 ```
 
+##Note
+
+`PageAdapter#getPageWidth()` is used as a `getPageHeight()` in the lib.
+
 ##License
 
 ```
