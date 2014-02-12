@@ -2253,7 +2253,7 @@ public class VerticalViewPager extends ViewGroup {
         }
         // Don't lose the rounded component
         mLastMotionY += scrollY - (int) scrollY;
-        scrollTo((int) scrollY, getScrollX());
+        scrollTo(getScrollX(), (int) scrollY);
         pageScrolled((int) scrollY);
 
         // Synthesize an event for the VelocityTracker.
