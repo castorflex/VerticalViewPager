@@ -10,7 +10,7 @@ The lib will be available soon on Maven Central. All you have to do is add it on
 
 ```xml
 dependencies {
-    compile 'com.github.castorflex.verticalviewpager:library:19.0.0'
+    compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
 }
 ```
 
