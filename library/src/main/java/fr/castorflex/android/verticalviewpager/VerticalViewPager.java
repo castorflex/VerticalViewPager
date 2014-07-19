@@ -192,6 +192,8 @@ public class VerticalViewPager extends ViewGroup {
     private int mDrawingOrder;
     private ArrayList<View> mDrawingOrderedChildren;
     private static final ViewPositionComparator sPositionComparator = new ViewPositionComparator();
+    
+    private boolean mControlLayerType = true;
 
     /**
      * Indicates that the pager is in an idle, settled state. The current page
@@ -282,7 +284,7 @@ public class VerticalViewPager extends ViewGroup {
         }
 
         mScrollState = newState;
-        if (mPageTransformer != null) {
+        if (mPageTransformer != null && mControlLayerType) {
             // PageTransformers can do complex things that benefit from hardware layers.
             enableLayers(newState != SCROLL_STATE_IDLE);
         }
@@ -2786,4 +2788,8 @@ public class VerticalViewPager extends ViewGroup {
             return llp.position - rlp.position;
         }
     }
+    
+    public void setControlLayerType(boolean controlLayerType) {
+		mControlLayerType = controlLayerType;
+	}
 }
