@@ -98,7 +98,7 @@ public class VerticalViewPager extends ViewGroup {
         }
     };
 
-    private final ArrayList<ItemInfo> mItems = new ArrayList<ItemInfo>();
+    private final ArrayList<ItemInfo> mItems = new ArrayList<>();
     private final ItemInfo mTempItem = new ItemInfo();
 
     private final Rect mTempRect = new Rect();
@@ -1736,15 +1736,16 @@ public class VerticalViewPager extends ViewGroup {
                 final float xDiff = Math.abs(x - mInitialMotionX);
                 if (DEBUG) Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
 
-                if (dy != 0 && !isGutterDrag(mLastMotionY, dy) &&
-                        canScroll(this, false, (int) dy, (int) x, (int) y)) {
-                    // Nested view has scrollable area under this point. Let it be handled there.
-                    mLastMotionX = x;
-                    mLastMotionY = y;
-                    mIsUnableToDrag = true;
-                    return false;
-                }
-                if (yDiff > mTouchSlop && yDiff * 0.5f > xDiff) {
+//                if (dy != 0 && !isGutterDrag(mLastMotionY, dy) &&
+//                        canScroll(this, false, (int) dy, (int) x, (int) y)) {
+//                    // Nested view has scrollable area under this point. Let it be handled there.
+//                    mLastMotionX = x;
+//                    mLastMotionY = y;
+//                    mIsUnableToDrag = true;
+//                    return false;
+//                }
+//                if (yDiff > mTouchSlop && yDiff * 0.5f > xDiff) {
+                if (dy != 0 && !canScroll(this, true, (int) dy, (int) x, (int) y)) {
                     if (DEBUG) Log.v(TAG, "Starting drag!");
                     mIsBeingDragged = true;
                     requestParentDisallowInterceptTouchEvent(true);
