@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +101,7 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
                     return "PAGE 0";
@@ -122,7 +121,7 @@ public class MainActivity extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {//implements ViewDelegate {
+    public static class PlaceholderFragment extends Fragment {
         String[] array = new String[]{"Android 1", "Android 2", "Android 3",
                 "Android 4", "Android 5", "Android 6", "Android 7", "Android 8",
                 "Android 9", "Android 10", "Android 11", "Android 12", "Android 13",
