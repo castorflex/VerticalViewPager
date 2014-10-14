@@ -2368,7 +2368,7 @@ public class VerticalViewPager extends ViewGroup {
     }
 
     protected boolean allowDragUp(float dy) {
-        return mCurItem != getChildCount() - 1 && dy < 0;
+        return mCurItem != getAdapter().getCount() - 1 && dy < 0;
     }
 
     @Override
