@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_dark">
+    android:orientation="vertical"
+    android:padding="16dip">
 
-    <ListView
-        android:id="@+id/listView"
+    <TextView
+        android:id="@+id/text1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="100dip"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>
