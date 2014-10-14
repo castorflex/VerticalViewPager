@@ -52,7 +52,6 @@ import java.util.Comparator;
  * Just a copy of the original ViewPager modified to support vertical Scrolling
  */
 public class VerticalViewPager extends ViewGroup {
-
     private static final String TAG = "ViewPager";
     private static final boolean DEBUG = false;
 
@@ -324,7 +323,7 @@ public class VerticalViewPager extends ViewGroup {
             final boolean wasFirstLayout = mFirstLayout;
             mFirstLayout = true;
             mExpectedAdapterCount = mAdapter.getCount();
-            if (mRestoredCurItem >= 0) {
+            if (mRestoredCurItem >= 0 && mRestoredAdapterState != null && mRestoredClassLoader != null) {
                 mAdapter.restoreState(mRestoredAdapterState, mRestoredClassLoader);
                 setCurrentItemInternal(mRestoredCurItem, false, true);
                 mRestoredCurItem = -1;
@@ -1736,16 +1735,7 @@ public class VerticalViewPager extends ViewGroup {
                 final float xDiff = Math.abs(x - mInitialMotionX);
                 if (DEBUG) Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
 
-//                if (dy != 0 && !isGutterDrag(mLastMotionY, dy) &&
-//                        canScroll(this, false, (int) dy, (int) x, (int) y)) {
-//                    // Nested view has scrollable area under this point. Let it be handled there.
-//                    mLastMotionX = x;
-//                    mLastMotionY = y;
-//                    mIsUnableToDrag = true;
-//                    return false;
-//                }
-//                if (yDiff > mTouchSlop && yDiff * 0.5f > xDiff) {
-                if (dy != 0 && !canScroll(this, true, (int) dy, (int) x, (int) y)) {
+                if (dy != 0 && (allowDragDown(dy) || allowDragUp(dy)) && !canScroll(this, true, (int) dy, (int) x, (int) y)) {
                     if (DEBUG) Log.v(TAG, "Starting drag!");
                     mIsBeingDragged = true;
                     requestParentDisallowInterceptTouchEvent(true);
@@ -2365,6 +2355,20 @@ public class VerticalViewPager extends ViewGroup {
         }
 
         return checkV && ViewCompat.canScrollVertically(v, -dy);
+    }
+
+    /**
+     * Return false if:
+     * If the adapter is in the first row
+     * & (If the child is a viewgroup) If the child is in the first row
+     * & If the scroll is trying to go up
+     */
+    protected boolean allowDragDown(float dy) {
+        return mCurItem != 0 && dy > 0;
+    }
+
+    protected boolean allowDragUp(float dy) {
+        return mCurItem != getChildCount() - 1 && dy < 0;
     }
 
     @Override
