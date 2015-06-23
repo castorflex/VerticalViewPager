@@ -704,7 +704,7 @@ public class VerticalViewPager extends ViewGroup {
 
         final int height = getClientHeight();
         final int halfHeight = height / 2;
-        final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / height);
+        final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dy) / height);
         final float distance = halfHeight + halfHeight *
                 distanceInfluenceForSnapDuration(distanceRatio);
 
@@ -714,7 +714,7 @@ public class VerticalViewPager extends ViewGroup {
             duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
         } else {
             final float pageHeight = height * mAdapter.getPageWidth(mCurItem);
-            final float pageDelta = (float) Math.abs(dx) / (pageHeight + mPageMargin);
+            final float pageDelta = (float) Math.abs(dy) / (pageHeight + mPageMargin);
             duration = (int) ((pageDelta + 1) * 100);
         }
         duration = Math.min(duration, MAX_SETTLE_DURATION);
@@ -899,7 +899,7 @@ public class VerticalViewPager extends ViewGroup {
                         mAdapter.destroyItem(this, pos, ii.object);
                         if (DEBUG) {
                             Log.i(TAG, "populate() - destroyItem() with pos: " + pos +
-                                    " view: " + ((View) ii.object));
+                                    " view: " + ii.object);
                         }
                         itemIndex--;
                         curIndex--;
@@ -933,7 +933,7 @@ public class VerticalViewPager extends ViewGroup {
                             mAdapter.destroyItem(this, pos, ii.object);
                             if (DEBUG) {
                                 Log.i(TAG, "populate() - destroyItem() with pos: " + pos +
-                                        " view: " + ((View) ii.object));
+                                        " view: " + ii.object);
                             }
                             ii = itemIndex < mItems.size() ? mItems.get(itemIndex) : null;
                         }
@@ -1734,7 +1734,7 @@ public class VerticalViewPager extends ViewGroup {
                 final float yDiff = Math.abs(dy);
                 final float x = MotionEventCompat.getX(ev, pointerIndex);
                 final float xDiff = Math.abs(x - mInitialMotionX);
-                if (DEBUG) Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
+                if (DEBUG) Log.v(TAG, "Moved to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
 
                 if (dy != 0 && !isGutterDrag(mLastMotionY, dy) &&
                         canScroll(this, false, (int) dy, (int) x, (int) y)) {
@@ -1797,7 +1797,7 @@ public class VerticalViewPager extends ViewGroup {
 
                 if (DEBUG) Log.v(TAG, "Down at " + mLastMotionX + "," + mLastMotionY
                         + " mIsBeingDragged=" + mIsBeingDragged
-                        + "mIsUnableToDrag=" + mIsUnableToDrag);
+                        + " mIsUnableToDrag=" + mIsUnableToDrag);
                 break;
             }
 
@@ -1866,7 +1866,7 @@ public class VerticalViewPager extends ViewGroup {
                     final float x = MotionEventCompat.getX(ev, pointerIndex);
                     final float xDiff = Math.abs(x - mLastMotionX);
                     if (DEBUG)
-                        Log.v(TAG, "Moved x to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
+                        Log.v(TAG, "Moved to " + x + "," + y + " diff=" + xDiff + "," + yDiff);
                     if (yDiff > mTouchSlop && yDiff > xDiff) {
                         if (DEBUG) Log.v(TAG, "Starting drag!");
                         mIsBeingDragged = true;
@@ -1992,7 +1992,7 @@ public class VerticalViewPager extends ViewGroup {
             scrollY = bottomBound;
         }
         // Don't lose the rounded component
-        mLastMotionX += scrollY - (int) scrollY;
+        mLastMotionY += scrollY - (int) scrollY;
         scrollTo(getScrollX(), (int) scrollY);
         pageScrolled((int) scrollY);
 
@@ -2439,8 +2439,8 @@ public class VerticalViewPager extends ViewGroup {
                 direction);
         if (nextFocused != null && nextFocused != currentFocused) {
             if (direction == View.FOCUS_UP) {
-                // If there is nothing to the left, or this is causing us to
-                // jump to the right, then what we really want to do is page left.
+                // If there is nothing above, or this is causing us to
+                // jump down, then what we really want to do is page up.
                 final int nextTop = getChildRectInPagerCoordinates(mTempRect, nextFocused).top;
                 final int currTop = getChildRectInPagerCoordinates(mTempRect, currentFocused).top;
                 if (currentFocused != null && nextTop >= currTop) {
@@ -2449,8 +2449,8 @@ public class VerticalViewPager extends ViewGroup {
                     handled = nextFocused.requestFocus();
                 }
             } else if (direction == View.FOCUS_DOWN) {
-                // If there is nothing to the right, or this is causing us to
-                // jump to the left, then what we really want to do is page right.
+                // If there is nothing below, or this is causing us to
+                // jump down, then what we really want to do is page down.
                 final int nextDown = getChildRectInPagerCoordinates(mTempRect, nextFocused).bottom;
                 final int currDown = getChildRectInPagerCoordinates(mTempRect, currentFocused).bottom;
                 if (currentFocused != null && nextDown <= currDown) {
@@ -2460,10 +2460,10 @@ public class VerticalViewPager extends ViewGroup {
                 }
             }
         } else if (direction == FOCUS_UP || direction == FOCUS_BACKWARD) {
-            // Trying to move left and nothing there; try to page.
+            // Trying to move up and nothing there; try to page.
             handled = pageUp();
         } else if (direction == FOCUS_DOWN || direction == FOCUS_FORWARD) {
-            // Trying to move right and nothing there; try to page.
+            // Trying to move down and nothing there; try to page.
             handled = pageDown();
         }
         if (handled) {
@@ -2742,7 +2742,7 @@ public class VerticalViewPager extends ViewGroup {
         public int gravity;
 
         /**
-         * Width as a 0-1 multiplier of the measured pager width
+         * Height as a 0-1 multiplier of the measured pager height
          */
         float heightFactor = 0.f;
 
