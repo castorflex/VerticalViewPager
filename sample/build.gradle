@@ -10,12 +10,18 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.0.0"
+
+    def androidCompileSdkVersion = project.androidCompileSdkVersion.toInteger()
+    def androidTargetSdkVersion = project.androidTargetSdkVersion.toInteger()
+    def androidMinSdkVersion = project.androidMinSdkVersion.toInteger()
+    def androidBuildToolsVersion = project.androidBuildToolsVersion.toString()
+
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
     }
