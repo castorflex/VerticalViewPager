@@ -399,7 +399,7 @@ public class VerticalViewPager extends ViewGroup {
     }
 
     /**
-     * Set the currently selected page with velocity.
+     * Set the currently selected page with duration.
      *
      * @param item         Item index to select
      * @param duration     Scroll duration to reach item index
