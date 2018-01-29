@@ -88,13 +88,6 @@ class MainActivity : Activity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        Handler().postDelayed({
-            verticalViewPager.setCurrentItem(3,1500)
-        }, 3000)
-    }
-
     /**
      * A placeholder fragment containing a simple view.
      */
