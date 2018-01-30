@@ -398,15 +398,27 @@ public class VerticalViewPager extends ViewGroup {
         setCurrentItemInternal(item, smoothScroll, false);
     }
 
+    /**
+     * Set the currently selected page with duration.
+     *
+     * @param item         Item index to select
+     * @param duration     Scroll duration to reach item index
+     */
+    public void setCurrentItem(int item, int duration) {
+        mPopulatePending = false;
+        setCurrentItemInternal(item, true, false, 0, duration);
+    }
+
+
     public int getCurrentItem() {
         return mCurItem;
     }
 
     void setCurrentItemInternal(int item, boolean smoothScroll, boolean always) {
-        setCurrentItemInternal(item, smoothScroll, always, 0);
+        setCurrentItemInternal(item, smoothScroll, always, 0, 0);
     }
 
-    void setCurrentItemInternal(int item, boolean smoothScroll, boolean always, int velocity) {
+    void setCurrentItemInternal(int item, boolean smoothScroll, boolean always, int velocity, int duration) {
         if (mAdapter == null || mAdapter.getCount() <= 0) {
             setScrollingCacheEnabled(false);
             return;
@@ -445,12 +457,12 @@ public class VerticalViewPager extends ViewGroup {
             requestLayout();
         } else {
             populate(item);
-            scrollToItem(item, smoothScroll, velocity, dispatchSelected);
+            scrollToItem(item, smoothScroll, velocity, dispatchSelected, duration);
         }
     }
 
     private void scrollToItem(int item, boolean smoothScroll, int velocity,
-                              boolean dispatchSelected) {
+                              boolean dispatchSelected, int duration) {
         final ItemInfo curInfo = infoForPosition(item);
         int destY = 0;
         if (curInfo != null) {
@@ -459,7 +471,7 @@ public class VerticalViewPager extends ViewGroup {
                     Math.min(curInfo.offset, mLastOffset)));
         }
         if (smoothScroll) {
-            smoothScrollTo(0, destY, velocity);
+            smoothScrollTo(0, destY, velocity, duration);
             if (dispatchSelected && mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageSelected(item);
             }
@@ -672,7 +684,7 @@ public class VerticalViewPager extends ViewGroup {
      * @param y the number of pixels to scroll by on the Y axis
      */
     void smoothScrollTo(int x, int y) {
-        smoothScrollTo(x, y, 0);
+        smoothScrollTo(x, y, 0,0);
     }
 
     /**
@@ -682,7 +694,7 @@ public class VerticalViewPager extends ViewGroup {
      * @param y        the number of pixels to scroll by on the Y axis
      * @param velocity the velocity associated with a fling, if applicable. (0 otherwise)
      */
-    void smoothScrollTo(int x, int y, int velocity) {
+    void smoothScrollTo(int x, int y, int velocity, int duration) {
         if (getChildCount() == 0) {
             // Nothing to do.
             setScrollingCacheEnabled(false);
@@ -708,18 +720,20 @@ public class VerticalViewPager extends ViewGroup {
         final float distance = halfHeight + halfHeight *
                 distanceInfluenceForSnapDuration(distanceRatio);
 
-        int duration = 0;
-        velocity = Math.abs(velocity);
-        if (velocity > 0) {
-            duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
-        } else {
-            final float pageHeight = height * mAdapter.getPageWidth(mCurItem);
-            final float pageDelta = (float) Math.abs(dx) / (pageHeight + mPageMargin);
-            duration = (int) ((pageDelta + 1) * 100);
+        int scrollDuration = duration;
+        if (duration <= 0) {
+            velocity = Math.abs(velocity);
+            if (velocity > 0) {
+                duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
+            } else {
+                final float pageHeight = height * mAdapter.getPageWidth(mCurItem);
+                final float pageDelta = (float) Math.abs(dx) / (pageHeight + mPageMargin);
+                duration = (int) ((pageDelta + 1) * 100);
+            }
+            scrollDuration = Math.min(duration, MAX_SETTLE_DURATION);
         }
-        duration = Math.min(duration, MAX_SETTLE_DURATION);
 
-        mScroller.startScroll(sx, sy, dx, dy, duration);
+        mScroller.startScroll(sx, sy, dx, dy, scrollDuration);
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
@@ -1495,7 +1509,7 @@ public class VerticalViewPager extends ViewGroup {
         mDecorChildCount = decorCount;
 
         if (mFirstLayout) {
-            scrollToItem(mCurItem, false, 0, false);
+            scrollToItem(mCurItem, false, 0, false, 0);
         }
         mFirstLayout = false;
     }
@@ -1911,7 +1925,7 @@ public class VerticalViewPager extends ViewGroup {
                     final int totalDelta = (int) (y - mInitialMotionY);
                     int nextPage = determineTargetPage(currentPage, pageOffset, initialVelocity,
                             totalDelta);
-                    setCurrentItemInternal(nextPage, true, true, initialVelocity);
+                    setCurrentItemInternal(nextPage, true, true, initialVelocity, 0);
 
                     mActivePointerId = INVALID_POINTER;
                     endDrag();
@@ -1920,7 +1934,7 @@ public class VerticalViewPager extends ViewGroup {
                 break;
             case MotionEvent.ACTION_CANCEL:
                 if (mIsBeingDragged) {
-                    scrollToItem(mCurItem, true, 0, false);
+                    scrollToItem(mCurItem, true, 0, false, 0);
                     mActivePointerId = INVALID_POINTER;
                     endDrag();
                     needsInvalidate = mTopEdge.onRelease() | mBottomEdge.onRelease();
@@ -2210,7 +2224,7 @@ public class VerticalViewPager extends ViewGroup {
         final int totalDelta = (int) (mLastMotionY - mInitialMotionY);
         int nextPage = determineTargetPage(currentPage, pageOffset, initialVelocity,
                 totalDelta);
-        setCurrentItemInternal(nextPage, true, true, initialVelocity);
+        setCurrentItemInternal(nextPage, true, true, initialVelocity, 0);
         endDrag();
 
         mFakeDragging = false;
